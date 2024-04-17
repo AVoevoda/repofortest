@@ -34,10 +34,13 @@
     src: nginx.conf.j2
     dest: "{{ APP_PATH }}/nginx/conf.d/default.conf"
     mode: 0644
-    notify: restart nginx
+  register: nginx
     
 
 - name: Create and start services
   community.docker.docker_compose:
       project_src: "{{ APP_PATH }}"
   # register: output 
+- name: restart nginx 
+  shell: docker restart php-nginx 
+  when: nginx is changed 
